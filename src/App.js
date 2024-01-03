@@ -6,6 +6,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Close';
+import data from './Table/Datasource.json';
 import {
   GridRowModes,
   DataGrid,
@@ -29,59 +30,83 @@ const randomRole = () => {
 };
 
 
-//Initialize Arrays
-const initialRows = [
+//Initialize Arrays ?? We can introduces JSON object -> Rows
+//From The JSON Object We can get initial Rows
+
+/*const[userData,setUserState] = React.useState(users);
+useEffect(() => {
+  fetch("https://jsonplaceholder.typicode.com/posts")
+    .then((data) => data.json())
+    .then((data) => setTableData(data))
+
+}, [])*/
+
+/*const initialRows = [
   {
-    id: randomId(),
-    name: randomTraderName(),
-    age: 25,
-    joinDate: randomCreatedDate(),
-    role: randomRole(),
+    id: "65698b05eeedd468bfe5ea74",
+    name: "SupplierThree",
+    companyName: "SupplierThreeCompany",
+    type:1,
+    email:"apoorv.info@gmail.com",
+    city:3,
+    state:2,
+    contactNumber:1334567890,
+    gstNumber:123452,
+    productType:3,
+    
   },
   {
-    id: randomId(),
-    name: randomTraderName(),
-    age: 36,
-    joinDate: randomCreatedDate(),
-    role: randomRole(),
+    id: "656b404d98a25df6f82039c9",
+    name: "SupplierTwo",
+    companyName: "SupplierTwoCompany",
+    type:2,
+    email:"apoorv.trickster@gmail.com",
+    city:3,
+    state:2,
+    contactNumber:12254869,
+    gstNumber:65466,
+    productType:1,
+    
   },
   {
-    id: randomId(),
-    name: randomTraderName(),
-    age: 19,
-    joinDate: randomCreatedDate(),
-    role: randomRole(),
+    id: "656c86143bab9e005c8b19f9",
+    name: "SupplierOne",
+    companyName: "SupplierTwoCompany",
+    type:1,
+    email:"apoorv.incognito@gmail.com",
+    city:1,
+    state:2,
+    contactNumber:9412557856,
+    gstNumber:124567,
+    productType:1,
+    
   },
-  {
-    id: randomId(),
-    name: randomTraderName(),
-    age: 28,
-    joinDate: randomCreatedDate(),
-    role: randomRole(),
-  },
-  {
-    id: randomId(),
-    name: randomTraderName(),
-    age: 23,
-    joinDate: randomCreatedDate(),
-    role: randomRole(),
-  },
-];
+ 
+ 
+ 
+ 
+];*/
 
 
 //Add The required Information
 function EditToolbar(props) {
   const { setRows, setRowModesModel } = props;
 
+
+
+  //Function Not Working ((Later Add API to add new Record))
+  //Function to add new Record
   const handleClick = () => {
-    const id = randomId();
-    setRows((oldRows) => [...oldRows, { id, name: '', age: '', isNew: true }]);
+    const id = randomId(); // ID to be introduced here for New Record
+    setRows((oldRows) => [...oldRows, { id, name: 'Name?',companyName:'Company Name?',type:'Select',email:'Your Email',city:'Select',state:'Select',contactNumber:'Your Phone',gstNumber:'GST No',productType:'Select', isNew: true }]);
     setRowModesModel((oldModel) => ({
       ...oldModel,
       [id]: { mode: GridRowModes.Edit, fieldToFocus: 'name' },
     }));
   };
 
+
+    //AddRecord Button
   return (
     <GridToolbarContainer>
       <Button color="primary" startIcon={<AddIcon />} onClick={handleClick}>
@@ -92,7 +117,8 @@ function EditToolbar(props) {
 }
 
 export default function FullFeaturedCrudGrid() {
-  const [rows, setRows] = React.useState(initialRows);
+ 
+  const [rows, setRows] = React.useState(data); //Process data without $oid
   const [rowModesModel, setRowModesModel] = React.useState({});
 
   const handleRowEditStop = (params, event) => {
@@ -110,7 +136,7 @@ export default function FullFeaturedCrudGrid() {
   };
 
   const handleDeleteClick = (id) => () => {
-    setRows(rows.filter((row) => row.id !== id));
+    setRows(rows.filter((row) => row._id.$oid !== id));
   };
 
   const handleCancelClick = (id) => () => {
@@ -119,15 +145,15 @@ export default function FullFeaturedCrudGrid() {
       [id]: { mode: GridRowModes.View, ignoreModifications: true },
     });
 
-    const editedRow = rows.find((row) => row.id === id);
+    const editedRow = rows.find((row) => row._id.$oid === id);
     if (editedRow.isNew) {
-      setRows(rows.filter((row) => row.id !== id));
+      setRows(rows.filter((row) => row._id.$oid !== id));
     }
   };
 
   const processRowUpdate = (newRow) => {
     const updatedRow = { ...newRow, isNew: false };
-    setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
+    setRows(rows.map((row) => (row._id.$oid === newRow._id.$oid ? updatedRow : row)));
     return updatedRow;
   };
 
@@ -136,32 +162,69 @@ export default function FullFeaturedCrudGrid() {
   };
 
 
-  //Defining The columns
+  //Defining The columns from the JSON Object and include the Last two Buttons in that.
   const columns = [
-    { field: 'name', headerName: 'Name', width: 180, editable: true },
+    { field: 'name', headerName: 'Name', width: 150,align: 'left',
+    headerAlign: 'left', editable: true },
     {
-      field: 'age',
-      headerName: 'Age',
-      type: 'number',
-      width: 80,
-      align: 'left',
-      headerAlign: 'left',
+      field: 'companyName',
+      headerName: 'Company Name',
+     
+      width: 200,
+      
       editable: true,
     },
     {
-      field: 'joinDate',
-      headerName: 'Join date',
-      type: 'date',
-      width: 180,
+      field: 'email',
+      headerName: 'Email',
+    
+      width: 250,
       editable: true,
     },
+    
     {
-      field: 'role',
-      headerName: 'Department',
-      width: 220,
+      field: 'type',
+      headerName: 'Supplier Type',
+      width: 150,
       editable: true,
-      type: 'singleSelect',
-      valueOptions: ['Market', 'Finance', 'Development'],
+     
+    },
+    {
+      field: 'city',
+      headerName: 'City',
+      width: 100,
+      editable: true,
+    
+    },
+    {
+      field: 'state',
+      headerName: 'State',
+      width: 100,
+      editable: true,
+      
+    },
+    {
+      field: 'contactNumber',
+      headerName: 'Contact',
+      width: 150,
+      editable: true,
+      
+      
+    },
+    {
+      field: 'gstNumber',
+      headerName: 'GST No',
+      width: 100,
+      editable: true,
+     
+      
+    },
+    {
+      field: 'productType',
+      headerName: 'Product Type',
+      width: 200,
+      editable: true,
+     
     },
     {
       field: 'actions',
@@ -214,7 +277,7 @@ export default function FullFeaturedCrudGrid() {
   return (
     <Box
       sx={{
-        height: 500,
+        height: 600,
         width: '100%',
         '& .actions': {
           color: 'text.secondary',
@@ -227,7 +290,9 @@ export default function FullFeaturedCrudGrid() {
       <DataGrid
         rows={rows}
         columns={columns}
+        getRowId={(row: any) =>  row._id.$oid}
         editMode="row"
+        
         rowModesModel={rowModesModel}
         onRowModesModelChange={handleRowModesModelChange}
         onRowEditStop={handleRowEditStop}
