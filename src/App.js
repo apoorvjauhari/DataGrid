@@ -30,62 +30,7 @@ const randomRole = () => {
 };
 
 
-//Initialize Arrays ?? We can introduces JSON object -> Rows
-//From The JSON Object We can get initial Rows
 
-/*const[userData,setUserState] = React.useState(users);
-useEffect(() => {
-  fetch("https://jsonplaceholder.typicode.com/posts")
-    .then((data) => data.json())
-    .then((data) => setTableData(data))
-
-}, [])*/
-
-/*const initialRows = [
-  {
-    id: "65698b05eeedd468bfe5ea74",
-    name: "SupplierThree",
-    companyName: "SupplierThreeCompany",
-    type:1,
-    email:"apoorv.info@gmail.com",
-    city:3,
-    state:2,
-    contactNumber:1334567890,
-    gstNumber:123452,
-    productType:3,
-    
-  },
-  {
-    id: "656b404d98a25df6f82039c9",
-    name: "SupplierTwo",
-    companyName: "SupplierTwoCompany",
-    type:2,
-    email:"apoorv.trickster@gmail.com",
-    city:3,
-    state:2,
-    contactNumber:12254869,
-    gstNumber:65466,
-    productType:1,
-    
-  },
-  {
-    id: "656c86143bab9e005c8b19f9",
-    name: "SupplierOne",
-    companyName: "SupplierTwoCompany",
-    type:1,
-    email:"apoorv.incognito@gmail.com",
-    city:1,
-    state:2,
-    contactNumber:9412557856,
-    gstNumber:124567,
-    productType:1,
-    
-  },
- 
- 
- 
- 
-];*/
 
 
 //Add The required Information
