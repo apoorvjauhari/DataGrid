@@ -7,6 +7,7 @@ import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Close';
 import data from './Table/Datasource.json';
+import {doc,jsPDF} from 'jspdf';
 import {
   GridRowModes,
   DataGrid,
@@ -22,6 +23,7 @@ import {
   randomId,
   randomArrayItem,
 } from '@mui/x-data-grid-generator';
+import { Checkbox } from '@mui/material';
 
 //Roles Array from which Randomly Generate Roles
 const roles = ['Market', 'Finance', 'Development'];
@@ -50,11 +52,13 @@ function EditToolbar(props) {
     }));
   };
 
+  
+
 
     //AddRecord Button
   return (
     <GridToolbarContainer>
-      <Button color="primary" startIcon={<AddIcon />} onClick={handleClick}>
+      <Button color="primary" startIcon={<AddIcon />} variant='contained' onClick={handleClick}>
         Add record
       </Button>
     </GridToolbarContainer>
@@ -65,6 +69,7 @@ export default function FullFeaturedCrudGrid() {
  
   const [rows, setRows] = React.useState(data); //Process data without $oid
   const [rowModesModel, setRowModesModel] = React.useState({});
+  const [selectedRowsData, setSelectedRows] = React.useState(data);
 
   const handleRowEditStop = (params, event) => {
     if (params.reason === GridRowEditStopReasons.rowFocusOut) {
@@ -105,10 +110,36 @@ export default function FullFeaturedCrudGrid() {
   const handleRowModesModelChange = (newRowModesModel) => {
     setRowModesModel(newRowModesModel);
   };
+  const onRowsSelectionHandler = (id) => {
+     const selectedIDs = new Set(id); 
+       
+    const selectedRowsData = id.map((id) => rows.find((row) => row.id === id));  
+    
+    console.log(selectedIDs)    
+    
+   
+  };
+
+  //On selection We Get The Row Data
+  const handlePrint = () => {
+    
+    
+    //alert(selectedRows.length)
+    //const doc = new jsPDF({ orientation: "vertical" ,textAlign:"center"});
+     // doc.text('Your Innovya Details are ', 10, 10);
+     // doc.text(selectedRowsData.rows.$oid)
+      // doc.save("Invoice.pdf");
+      
+    
+  };
+  
+ 
+
 
 
   //Defining The columns from the JSON Object and include the Last two Buttons in that.
   const columns = [
+    
     { field: 'name', headerName: 'Name', width: 150,align: 'left',
     headerAlign: 'left', editable: true },
     {
@@ -123,14 +154,14 @@ export default function FullFeaturedCrudGrid() {
       field: 'email',
       headerName: 'Email',
     
-      width: 250,
+      width: 150,
       editable: true,
     },
     
     {
       field: 'type',
       headerName: 'Supplier Type',
-      width: 150,
+      width: 100,
       editable: true,
      
     },
@@ -151,7 +182,7 @@ export default function FullFeaturedCrudGrid() {
     {
       field: 'contactNumber',
       headerName: 'Contact',
-      width: 150,
+      width: 100,
       editable: true,
       
       
@@ -167,7 +198,7 @@ export default function FullFeaturedCrudGrid() {
     {
       field: 'productType',
       headerName: 'Product Type',
-      width: 200,
+      width: 100,
       editable: true,
      
     },
@@ -175,10 +206,11 @@ export default function FullFeaturedCrudGrid() {
       field: 'actions',
       type: 'actions',
       headerName: 'Actions',
-      width: 100,
+      width: 150,
       cellClassName: 'actions',
       getActions: ({ id }) => {
         const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
+        
 
         if (isInEditMode) {
           return [
@@ -188,8 +220,8 @@ export default function FullFeaturedCrudGrid() {
               sx={{
                 color: 'primary.main',
               }}
-              onClick={handleSaveClick(id)}
-            />,
+              onClick={handleSaveClick(id)}/>
+            ,
             <GridActionsCellItem
               icon={<CancelIcon />}
               label="Cancel"
@@ -214,6 +246,13 @@ export default function FullFeaturedCrudGrid() {
             onClick={handleDeleteClick(id)}
             color="inherit"
           />,
+            /*<GridActionsCellItem
+            icon={<Checkbox />}
+            label="Select"
+            sx={{
+              color: 'primary.main',
+            }}
+            onClick={handleDeleteClick(id)}/>*/
         ];
       },
     },
@@ -231,13 +270,17 @@ export default function FullFeaturedCrudGrid() {
           color: 'text.primary',
         },
       }}
+      
     >
       <DataGrid
         rows={rows}
         columns={columns}
         getRowId={(row: any) =>  row._id.$oid}
         editMode="row"
-        
+        checkboxSelection     
+        onRowSelectionModelChange={(id) => onRowsSelectionHandler(id)}
+
+          
         rowModesModel={rowModesModel}
         onRowModesModelChange={handleRowModesModelChange}
         onRowEditStop={handleRowEditStop}
@@ -249,6 +292,12 @@ export default function FullFeaturedCrudGrid() {
           toolbar: { setRows, setRowModesModel },
         }}
       />
+      <Button variant='contained' align='center'  startIcon={<SaveIcon />} onClick={handlePrint} >
+        Select Rows To Print Invoice
+      </Button>
     </Box>
+    
+    
   );
+  
 }
