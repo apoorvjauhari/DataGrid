@@ -120,7 +120,8 @@ export default function FullFeaturedCrudGrid() {
   };
  //On selection We Get The Row Data //Print Button
   const handlePrint = () => {
-   if (count !== 0) {
+    console.log(count)
+   if (count.valueOf(0) !== 0) {
     console.log(count)
       const myIterator = count.values();
       let pdftext = "";
@@ -138,13 +139,17 @@ export default function FullFeaturedCrudGrid() {
       }
       const doc = new jsPDF({ orientation: "vertical", textAlign: "center" });
     doc.text('Your Selected Row IDs are ', 10, 10);
+    if(pdftext != ''){
     doc.text(pdftext, 20, 20)
-    doc.save("Invoice.pdf");
+    doc.save("Invoice.pdf");}
+    else{ alert("Please Select The Rows To Generate PDF")}
+    window.location.reload(false)
   }
     else{
       alert("Please Select The Rows To Generate PDF")
+      
     }
-    //Unselect The Bar
+    
   };
   
 
